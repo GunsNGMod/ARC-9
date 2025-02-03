@@ -379,7 +379,6 @@ Alle Befehle, die die Leistung verbessern können:
 gmod_mcore_test 1
 mat_queue_mode 2
 cl_threaded_bone_setup 1
-cl_threaded_client_leaf_system 1
 r_threaded_client_shadow_manager 1
 r_threaded_renderables 1]]
 
@@ -599,6 +598,9 @@ L["settings.effects.muzzle_others.desc"] = "Zeige die Mündungs-Effekte der ARC9
 
 L["settings.effects.allflash.title"] = "Taschenlampen anderer"
 L["settings.effects.allflash.desc"] = "Zeigt die Taschenlampen aller Spieler an.\n\nBeeinträchtigt die Performance."
+
+L["settings.effects.lod.title"] = "LOD (Level of Detail) Distanz"
+L["settings.effects.lod.desc"] = "Wie weit du von Models entfernt sein musst, um sie durch Varianten niedrigerer Qualität ohne Zubehör zu ersetzen.\nNiedrigere Werte ersetzt Modelle bei näherer Distanz, wodurch Performance verbessert werden kann. Höhere Werte können die Performance beeinträchtigen, stellen Modelle jedoch auch auf weitere Entfernung bei höchstmöglicher Qualität dar.\n\nTPIK-Distanz wird ebenfalls beeinflusst."
 
 ////////// Viewmodel Settings
 L["settings.tabname.vm"] = "Viewmodel-Einstellungen"

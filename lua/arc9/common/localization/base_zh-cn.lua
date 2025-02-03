@@ -379,7 +379,6 @@ L["incompatible.never.confirm"] = "You have chosen to never show incompatiblity 
 -- gmod_mcore_test 1
 -- mat_queue_mode 2
 -- cl_threaded_bone_setup 1
--- cl_threaded_client_leaf_system 1
 -- r_threaded_client_shadow_manager 1
 -- r_threaded_renderables 1]]
 
@@ -863,6 +862,9 @@ L["settings.desc"] = "简介"
 
 -- L["settings.effects.allflash.title"] = "Other's Flashlights"
 -- L["settings.effects.allflash.desc"] = "Renders the flashlights from all players.\n\nImpacts performance."
+
+-- L["settings.effects.lod.title"] = "LOD (Level of Detail) Distance"
+-- L["settings.effects.lod.desc"] = "How far away you have to be from models for them to change into lower quality variants without attachments.\n\nLower values make the models change at lower distances, and could improve performance.\n\nHigher values could impact performance, but keeps the highest quality models loaded at further distances.\n\nTPIK distance is also affected."
 
 ////////// Viewmodel Settings
 -- L["settings.tabname.vm"] = "Viewmodel Settings"

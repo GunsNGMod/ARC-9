@@ -1,31 +1,33 @@
+local lodcvar = GetConVar("arc9_lod_distance")
 function SWEP:ShouldLOD()
-    local owner = self:GetOwner()
-    if LocalPlayer() == owner then return 0 end
+    if (self.NextLODCheck or 0) > CurTime() then return self.LastLOD or 0 end
+    self.NextLODCheck = CurTime() + 0.5
 
-    local dsquared
+    local owner, lp = self:GetOwner(), LocalPlayer()
+    if lp == owner then return 0 end
 
-    if IsValid(owner) then
-        dsquared = EyePos():DistToSqr(owner:GetPos())
-    else
-        dsquared = EyePos():DistToSqr(self:GetPos()) * 2 -- make lod appear sooner on dropped gunss
-    end
+    local result = 0
 
-    if dsquared >= 800000 then
-        return 2
-    elseif dsquared >= 400000 then
-        return 1.5
-    elseif dsquared >= 200000 then -- middle value for tpik lod
-        return 1
-    else
-        return 0
-    end
+    local screenSize = render.ComputePixelDiameterOfSphere(self:GetPos(), 0.5) -- same thing as in source:tm:
+    screenSize = screenSize * math.Clamp(lodcvar:GetFloat(), 0.3, 3)
+    local metric = screenSize > 0 and 100 / screenSize or 0
+    if !IsValid(owner) then metric = metric * 1.5 end
+
+    if metric > 128 then result = 2
+    elseif metric > 96 then result = 1.5
+    elseif metric > 64 then result = 1 end -- middle value for tpik lod
+
+    self.LastLOD = result
+    return result
 end
 
 function SWEP:DrawCustomModel(wm, custompos, customang)
     local owner = self:GetOwner()
 
     if !wm and !IsValid(owner) then return end
-    if !wm and owner:IsNPC() then return end
+    local lod = self:ShouldLOD()
+    local isnpc = owner:IsNPC() or lod > 0
+    if !wm and isnpc then return end
     if wm and ARC9.RTScopeRender then return end
     if custompos then wm = true end
 
@@ -37,9 +39,8 @@ function SWEP:DrawCustomModel(wm, custompos, customang)
             mdl = self.CModel
         else
             mdl = self.WModel
-            lod = self:ShouldLOD()
 
-            if mdl and mdl[1]:IsValid() then
+            if lod == 0 and mdl and mdl[1]:IsValid() then
                 mdl[1]:SetMaterial(self:GetProcessedValue("Material", true))
 
                 for ind = 0, 31 do
@@ -71,11 +72,11 @@ function SWEP:DrawCustomModel(wm, custompos, customang)
         end
     end
 
-    local onground = wm and !IsValid(owner)
-
-    local hidebones = self:GetHiddenBones(wm)
-
     if lod < 2 then
+        local onground = wm and !IsValid(owner)
+    
+        local hidebones = isnpc and {} or self:GetHiddenBones(wm)
+
         for _, model in ipairs(mdl or {}) do
             if model.IsAnimationProxy then continue end
             local slottbl = model.slottbl
